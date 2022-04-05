@@ -54,7 +54,7 @@ for i in tqdm(range(1, len(images))):
     # show the good keypoints
     img_matches = cv.drawMatches(img_src, kp1, img_dst, kp2, good_points, None)
 
-    # the query index of the keypoints and descriptors
+    # the index of the keypoints and descriptors
     src_pts = np.float32([kp1[m.queryIdx].pt for m in good_points]).reshape(-1, 1, 2)
     dst_pts = np.float32([kp2[m.trainIdx].pt for m in good_points]).reshape(-1, 1, 2)
 
