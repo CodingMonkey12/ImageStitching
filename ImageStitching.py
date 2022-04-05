@@ -11,6 +11,7 @@ GOOD_POINTS_LIMITED = 0.99
 # read images
 path = 'images'
 input_path = path + '/input/'
+output_path = path + '/output/'
 filenames = [input_path + filename for filename in os.listdir(input_path)]
 raw_images = [cv.imread(filename) for filename in filenames]
 count = len(raw_images)
@@ -104,6 +105,6 @@ for i in tqdm(range(1, len(images))):
     ax = fig.add_subplot(gs[5, :])
     ax.imshow(dst_target[:, :, ::-1])
 
-    plt.savefig('images/output/panorama_processing_{}.jpg'.format(i))
+    plt.savefig(output_path + 'panorama_processing_{}.jpg'.format(i))
 
-cv.imwrite('images/output/panorama.jpg', img_src)
+cv.imwrite(output_path + 'panorama.jpg', img_src)
