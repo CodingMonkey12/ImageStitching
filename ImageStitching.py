@@ -4,6 +4,7 @@ from matplotlib import pyplot as plt
 import matplotlib.gridspec as gridspec
 import os
 from tqdm import tqdm
+from RemoveBlackEdge import remove_black_edge
 
 # set up the good_point_limited
 GOOD_POINTS_LIMITED = 0.99
@@ -33,6 +34,9 @@ img_src = images[0]
 # the image need to stitch
 for i in tqdm(range(1, len(images))):
     img_dst = images[i]
+    # make sure to merge from left to right
+    if i % 2 == 0:
+        img_src, img_dst = img_dst, img_src
 
     # detects keypoints and computes the descriptors
     orb = cv.ORB_create()
@@ -77,12 +81,15 @@ for i in tqdm(range(1, len(images))):
 
     dst_target = np.maximum(dst1, img_transform)
 
+    # remove black edge
+    dst_target_removed = remove_black_edge(dst_target)
+
     # use dst_target as the source image
-    img_src = dst_target
+    img_src = dst_target_removed
 
     # show all images
     fig = plt.figure(tight_layout=True, figsize=(8, 18))
-    gs = gridspec.GridSpec(6, 2)
+    gs = gridspec.GridSpec(7, 2)
 
     ax = fig.add_subplot(gs[0, 0])
     ax.imshow(img_src[:, :, ::-1])
@@ -104,6 +111,9 @@ for i in tqdm(range(1, len(images))):
 
     ax = fig.add_subplot(gs[5, :])
     ax.imshow(dst_target[:, :, ::-1])
+
+    ax = fig.add_subplot(gs[6, :])
+    ax.imshow(dst_target_removed[:, :, ::-1])
 
     plt.savefig(output_path + 'panorama_processing_{}.jpg'.format(i))
 
